@@ -19,7 +19,7 @@ send_pings_enabled = True
 
 # Cooldown dictionary to track the last time the bot was mentioned
 cooldown = {}
-allowed_channel_ids = [1240805113136681051]
+allowed_channel_ids = [1240805113136681051,1291184003939958896]
 category_id = 1240844403082268712  
 
 @bot.event
