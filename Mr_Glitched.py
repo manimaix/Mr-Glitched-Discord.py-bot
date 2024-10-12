@@ -19,8 +19,8 @@ send_pings_enabled = True
 
 # Cooldown dictionary to track the last time the bot was mentioned
 cooldown = {}
-allowed_channel_ids = [1240805113136681051,1291184003939958896]
-category_id = 1240844403082268712  
+allowed_channel_ids = [1240805113136681051]
+category_id = [1240844403082268712,1291184003939958896]  
 
 @bot.event
 async def on_ready():
@@ -60,7 +60,8 @@ async def send_pings(channel):
 async def send_marijester_links(channellink, messagelink, detected):
     channel = bot.get_channel(channellink)
     if channel:
-        await channel.send(f"{detected} is Found!\n Detected in: {messagelink}")
+        await asyncio.sleep(15)  # Wait for 15 seconds
+        await channel.send(f"{detected} is Found!\nDetected in: {messagelink}")
 
 
 @bot.event
@@ -69,7 +70,7 @@ async def on_message(message):
         return  # Ignore messages from the bot itself
 
     # Check if the bot is mentioned
-    if ((bot.user.mentioned_in(message)) or (message.author.bot and 'glitched' in message.content.lower())) and (message.channel.id in allowed_channel_ids or message.channel.category_id == category_id):
+    if ((bot.user.mentioned_in(message)) or (message.author.bot and 'glitched' in message.content.lower())) and (message.channel.id in allowed_channel_ids or message.channel.category_id in category_id):
         current_time = time.time()
         if message.guild.id not in cooldown or (current_time - cooldown[message.guild.id]) > 600:  # 600 seconds = 10 minutes
             cooldown[message.guild.id] = current_time
@@ -77,14 +78,14 @@ async def on_message(message):
             await countdown_timer(message.channel)
         else:
             await message.channel.send(">>> I'm on cooldown. Try again later.")
-    elif('glitchstop' in message.content.lower()) and (message.channel.id in allowed_channel_ids or message.channel.category_id == category_id):
+    elif('glitchstop' in message.content.lower()) and (message.channel.id in allowed_channel_ids or message.channel.category_id in category_id):
         current_time = time.time()
         global send_pings_enabled
         send_pings_enabled = False
         await message.channel.send("Mass Pinging have stopped.")
         await asyncio.sleep(1)
         send_pings_enabled = True
-    if message.author.bot and any(word in message.content.lower() for word in ['mari', 'jester']) and message.channel.category_id == category_id:
+    if message.author.bot and any(word in message.content.lower() for word in ['mari', 'jester']) and message.channel.category_id in category_id:
         message_link = f"https://discord.com/channels/{message.guild.id}/{message.channel.id}/{message.id}"
         detected = []
 
